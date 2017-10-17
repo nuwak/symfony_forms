@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenusFormType extends AbstractType
@@ -16,7 +18,9 @@ class GenusFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'help' => 'Type your name'
+            ])
             ->add('subFamily', EntityType::class, [
                 'placeholder' => 'Choose a Sub Family',
                 'class' => SubFamily::class,
@@ -46,4 +50,11 @@ class GenusFormType extends AbstractType
             'data_class' => 'AppBundle\Entity\Genus'
         ]);
     }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $view['funFact']->vars['help'] = 'other help message';
+    }
+
+
 }
