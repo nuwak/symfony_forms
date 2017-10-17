@@ -5,10 +5,13 @@
 
     <div class="form-group cool-class{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{{ showErrorIcon ? ' has-feedback' : '' }}">
         {{- form_label(form) -}}
+        {% if help|default %}
+            {# set the aria-describedby attribute #}
+            {%- set attr = attr|merge({'aria-describedby': 'help-block-'~id }) -%}
+        {% endif %}
         {{- form_widget(form) -}}
         {% if help|default %}
-            <span class="help-block">{{ help }}</span>
-            {%- set attr = attr|merge({'aria-describedby': 'help-block-'~id }) -%}
+            <span class="help-block" id="help-block-{{ id }}">{{ help }}</span>
         {% endif %}
         {{- form_errors(form) -}}
     </div>
@@ -17,7 +20,6 @@
 {% block form_widget_simple -%}
     {% set showErrorIcon = false %}
     {% if type is not defined or type not in ['file', 'hidden'] %}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
         {# show error icon for these types #}
         {% set showErrorIcon = (not compound or force_error|default(false)) and not valid %}
     {% endif %}
