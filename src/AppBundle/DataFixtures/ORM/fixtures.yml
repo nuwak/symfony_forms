@@ -23,5 +23,14 @@ AppBundle\Entity\SubFamily:
 AppBundle\Entity\User:
     user_{1..10}:
         email: weaverryan+<current()>@gmail.com
-        plainPassword: iliketurtles
+        plainPassword: 123
         roles: ['ROLE_ADMIN']
+        avatarUri: <imageUrl(100, 100, 'abstract')>
+    user.aquanaut_{1..10}:
+        email: aquanaut<current()>@example.org
+        plainPassword: 123
+        isScientist: true
+        firstName: <firstName()>
+        lastName: <lastName()>
+        universityName: <company()> University
+        avatarUri: <imageUrl(100, 100, 'abstract')>
