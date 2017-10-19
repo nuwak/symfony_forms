@@ -52,4 +52,33 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    /**
+     * @Route("/users/{id}/edit", name="user_edit")
+     * @param User $user
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(User $user, Request $request)
+    {
+        $form = $this->createForm(UserEditForm::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'User Updated!');
+
+            return $this->redirectToRoute('user_edit', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'userForm' => $form->createView()
+        ]);
+
+    }
 }
