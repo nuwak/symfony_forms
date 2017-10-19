@@ -196,4 +196,12 @@ class Genus
     {
         return $this->genusScientists;
     }
+
+    /**
+     * @param User $user
+     */
+    public function removeGenusScientist(User $user)
+    {
+        $this->genusScientists->removeElement($user);
+    }
 }
