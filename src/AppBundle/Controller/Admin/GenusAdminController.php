@@ -60,6 +60,9 @@ class GenusAdminController extends Controller
 
     /**
      * @Route("/genus/{id}/edit", name="admin_genus_edit")
+     * @param Request $request
+     * @param Genus $genus
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Genus $genus)
     {
