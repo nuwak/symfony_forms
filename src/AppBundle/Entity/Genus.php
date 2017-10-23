@@ -202,6 +202,10 @@ class Genus
      */
     public function removeGenusScientist(User $user)
     {
+        if (!$this->genusScientists->contains($user)) {
+            return;
+        }
+
         $this->genusScientists->removeElement($user);
     }
 }
