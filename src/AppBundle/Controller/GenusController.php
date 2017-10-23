@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\GenusNote;
+use AppBundle\Entity\GenusScientist;
 use AppBundle\Service\MarkdownTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,6 +20,7 @@ class GenusController extends Controller
 {
     /**
      * @Route("/genus/new")
+     * Мля напишу тут небольшой комментарий, чтобы он тут был, но правда он не несет никакой пользы, но пофиг, зато есть, возможно лучше было бы чтобы его не было, но при этом не так плохо и то что он здесь есть. Если этот комментарий когото не устраивает может его удалить и путь это будет на его совести.
      */
     public function newAction()
     {
@@ -41,7 +43,12 @@ class GenusController extends Controller
         $user = $em->getRepository('AppBundle:User')
             ->findOneBy(['email' => 'aquanaut1@example.org']);
 
-        $genus->addGenusScientist($user);
+        $genusScientist = new GenusScientist();
+        $genusScientist->setGenus($genus);
+        $genusScientist->setUser($user);
+        $genusScientist->setYearsStudied(10);
+        $em->persist($genusScientist);
+
         $em->persist($genus);
         $em->persist($genusNote);
         $em->flush();
@@ -131,23 +138,15 @@ class GenusController extends Controller
     public function removeGenusScientistAction($genusId, $userId)
     {
         $em = $this->getDoctrine()->getManager();
-        $genus = $em->getRepository('AppBundle:Genus')
-            ->find($genusId);
 
-        if (!$genus) {
-            throw $this->createNotFoundException('genus not found');
-        }
+        $genusScientist = $em->getRepository('AppBundle:GenusScientist')
+            ->findOneBy([
+                'user' => $userId,
+                'genus' => $genusId
+            ]);
 
-        $genusScientist = $em->getRepository('AppBundle:User')
-            ->find($userId);
+        $em->remove($genusScientist);
 
-        if (!$genusScientist) {
-            throw $this->createNotFoundException('User not found');
-        }
-
-        $genus->removeGenusScientist($genusScientist);
-
-        $em->persist($genus);
         $em->flush();
 
         return new Response(null, 204);
